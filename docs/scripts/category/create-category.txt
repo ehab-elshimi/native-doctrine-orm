@@ -1,0 +1,16 @@
+<?php
+require_once __DIR__ . '/../config/bootstrap.php';
+
+use App\Service\ProductService;
+use App\Service\CategoryService;
+
+$categoryService = new CategoryService($entityManager);
+$productService = new ProductService($entityManager);
+
+# Create New Category 
+$category = $categoryService->createCategory("Electronics");
+
+# Create New Category[Product] 
+$product = $productService->createProduct("Laptop", 999.99, $category);
+
+echo "Created Product: " . $product->getName() . " in " . $category->getName();

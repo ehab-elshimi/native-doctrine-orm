@@ -1,0 +1,76 @@
+<?php
+namespace App\Repository;
+
+use App\Entity\Product;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
+
+class ProductRepository extends EntityRepository
+{
+    /**
+     * Get all products
+     *
+     * @return Product[]
+     */
+    public function findAllProducts(): array
+    {
+        return $this->findAll();
+    }
+
+    /**
+     * Find products with exact price
+     *
+     * @param float $price
+     * @return Product[]
+     */
+    public function findProductsByPrice(float $price): array
+    {
+        return $this->findBy(['price' => $price]);
+    }
+
+    /**
+     * Find products with price greater than or equal to $minPrice
+     *
+     * @param float $minPrice
+     * @return Product[]
+     */
+    public function findProductsByMinPrice(float $minPrice): array
+    {
+        $qb = $this->createQueryBuilder('p')
+                   ->where('p.price >= :minPrice')
+                   ->setParameter('minPrice', $minPrice);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Using Query Builder to get all products with their categories (eager loading)
+     *
+     * @return Product[]
+     */
+    public function findProductsWithCategory(): array
+    {
+        $qb = $this->createQueryBuilder('p')
+                   ->innerJoin('p.category', 'c')  // join category
+                   ->addSelect('c');               // eager load categories
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Optional: Find products by category ID
+     *
+     * @param int $categoryId
+     * @return Product[]
+     */
+    public function findProductsByCategory(int $categoryId): array
+    {
+        $qb = $this->createQueryBuilder('p')
+                   ->join('p.category', 'c')
+                   ->where('c.id = :catId')
+                   ->setParameter('catId', $categoryId)
+                   ->addSelect('c');
+
+        return $qb->getQuery()->getResult();
+    }
+}

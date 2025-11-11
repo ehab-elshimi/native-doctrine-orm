@@ -1,0 +1,96 @@
+<?php
+namespace App\Doctrine;
+
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMSetup;
+
+class EntityManagerFactory
+{
+    public function getEntityManager(string $db): EntityManager
+    {
+        $params = match($db) {
+            'mysql' => [
+                'driver' => 'pdo_mysql',
+                'host' => '127.0.0.1',
+                'port' => 3306,
+                'dbname' => 'mysql_example',
+                'user' => 'mysql_user',
+                'password' => 'mysql_pass',
+                'charset' => 'utf8mb4'
+            ],
+            'pgsql' => [
+                'driver' => 'pdo_pgsql',
+                'host' => '127.0.0.1',
+                'port' => 5432,
+                'dbname' => 'pgsql_example',
+                'user' => 'pgsql_user',
+                'password' => 'pgsql_pass',
+                'charset' => 'utf8'
+            ],
+            'sqlite' => [
+                'driver' => 'pdo_sqlite',
+                'path' => __DIR__ . '/../../db/sqlite_example.db'
+            ],
+            'sqlsrv' => [
+                'driver' => 'pdo_sqlsrv',
+                'host' => '127.0.0.1',
+                'port' => 1433,
+                'dbname' => 'sqlsrv_example',
+                'user' => 'sqlsrv_user',
+                'password' => 'sqlsrv_pass'
+            ],
+            default => throw new \Exception("Unknown database: $db"),
+        };
+
+        $config = require __DIR__ . '/../../config/doctrine.php';
+        return EntityManager::create($params, $config);
+    }
+}
+
+<?php
+declare(strict_types=1);
+
+use App\Doctrine\EntityManagerFactory;
+use App\Service\ProductService;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+session_start();
+
+$factory = new EntityManagerFactory();
+
+// ✅ التعامل مع اختيار القاعدة أو جميع القواعد
+if (isset($_GET['db'])) {
+    $_SESSION['db_choice'] = $_GET['db'];
+}
+
+$dbChoice = $_SESSION['db_choice'] ?? 'mysql';
+
+// ✅ إنشاء EntityManagers حسب الاختيار
+$emConnections = [];
+if ($dbChoice === 'all') {
+    $emConnections = [
+        'mysql' => $factory->getEntityManager('mysql'),
+        'pgsql' => $factory->getEntityManager('pgsql'),
+    ];
+} else {
+    $emConnections = [
+        $dbChoice => $factory->getEntityManager($dbChoice),
+    ];
+}
+
+// ✅ إضافة منتج جديد لو ضغطت الزر
+if (isset($_GET['add_product'])) {
+    foreach ($emConnections as $dbName => $em) {
+        $service = new ProductService($em);
+        $service->createProduct("Random Product " . strtoupper($dbName), rand(10, 500));
+    }
+}
+
+// ✅ جلب البيانات من كل قاعدة
+$allProducts = [];
+foreach ($emConnections as $dbName => $em) {
+    $service = new ProductService($em);
+    $allProducts[$dbName] = $service->getAll();
+}
+?>a

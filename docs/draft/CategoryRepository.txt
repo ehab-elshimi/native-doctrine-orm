@@ -1,0 +1,60 @@
+<?php
+namespace App\Repository;
+
+use App\Entity\Category;
+use Doctrine\ORM\EntityRepository;
+
+class CategoryRepository extends EntityRepository
+{
+    /**
+     * Get all categories
+     *
+     * @return Category[]
+     */
+    public function findAllCategories(): array
+    {
+        return $this->findAll();
+    }
+
+    /**
+     * Find category by exact name
+     *
+     * @param string $name
+     * @return Category|null
+     */
+    public function findByName(string $name): ?Category
+    {
+        return $this->findOneBy(['name' => $name]);
+    }
+
+    /**
+     * Using Query Builder to get all categories with their products (eager loading)
+     *
+     * @return Category[]
+     */
+    public function findCategoriesWithProducts(): array
+    {
+        $qb = $this->createQueryBuilder('c')
+                   ->leftJoin('c.products', 'p') // join products
+                   ->addSelect('p');             // eager load products
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Optional: Find categories by product price
+     *
+     * @param float $minPrice
+     * @return Category[]
+     */
+    public function findCategoriesByProductMinPrice(float $minPrice): array
+    {
+        $qb = $this->createQueryBuilder('c')
+                   ->join('c.products', 'p')
+                   ->where('p.price >= :minPrice')
+                   ->setParameter('minPrice', $minPrice)
+                   ->addSelect('p');
+
+        return $qb->getQuery()->getResult();
+    }
+}

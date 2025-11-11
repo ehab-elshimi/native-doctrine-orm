@@ -1,0 +1,25 @@
+{
+    "name": "ehabd/native-doctrine-project",
+    "description": "A native PHP project using Doctrine ORM",
+    "type": "project",
+    "require": {
+        "doctrine/dbal": "^4.3",
+        "doctrine/orm": "^3.5",
+        "doctrine/migrations": "^3.9",
+        "symfony/cache": "^7.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ehab",
+            "email": "ehab.developer.email@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "license": "MIT"
+}
+    
