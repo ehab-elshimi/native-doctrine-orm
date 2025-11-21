@@ -1,31 +1,50 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
-
-use Doctrine\DBAL\DriverManager;
+use App\Controllers\CategoryController;
+use App\Controllers\ProductController;
+use App\Core\Container;
+use App\Services\CategoryService;
+use App\Services\ProductService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
+use Doctrine\DBAL\DriverManager;
 
+$container = new Container();
 
-#------------------------------------------- DBAL Layer -----------------------------------------------------------------
-# my-connection-data
-$connectionParams = [
-    "dbname" => 'orm_database',
-    "user" => 'root',
-    "password" => 'Ehab@2030',
-    "host" => '127.0.0.1',
-    "driver" => 'pdo_mysql'
-];
-# Use Driver Of DBAL TO make connection but my configuration will be through Orm => it will make it
-$conn = DriverManager::getConnection($connectionParams);
+# EntityManager
+$container->set('entityManager', function($c) {
+    $connectionParams = [
+        "dbname" => 'orm_database', // create database with name => 'orm_database'
+        "user" => 'root',
+        "password" => '', // password
+        "host" => '127.0.0.1',
+        "driver" => 'pdo_mysql'
+    ];
+    $conn = DriverManager::getConnection($connectionParams);
 
-#------------------------------------------- ORM Layer -----------------------------------------------------------------
-# All My Paths e-specially Entities Path So It Can Annotated it and Start His Powerful Jobs
-$paths = [__DIR__ . '/../src/Entity'];
-$isDevMode = true;
+    $paths = [__DIR__ . '/../src/App/Entity'];
+    $isDevMode = true;
+    $config = ORMSetup::createAttributeMetadataConfiguration($paths, $isDevMode);
 
-# Set My Doctrine ORM configuration
-$ormConfig = ORMSetup::createAttributeMetadataConfiguration($paths, $isDevMode);
+    return new EntityManager($conn, $config);
+});
 
-# Connect and Make Instance Of Entity Manager => GO with $entityManager or $em
-return new EntityManager($conn, $ormConfig);
+# Services
+$container->set('categoryService', function($c) {
+    return new CategoryService($c->get('entityManager'));
+});
 
+$container->set('productService', function($c) {
+    return new ProductService($c->get('entityManager'));
+});
+
+# Controllers
+$container->set('categoryController', function($c) {
+    return new CategoryController($c->get('categoryService'));
+});
+
+$container->set('productController', function($c) {
+    return new ProductController($c->get('productService'));
+});
+
+return $container;

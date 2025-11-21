@@ -1,14 +1,18 @@
 <?php
+
 namespace App\Controllers;
 
-use App\Service\CategoryService;
+use App\Services\CategoryService;
 
 class CategoryController
 {
+    # CategoryService instance (Dependency Injection)
     private CategoryService $categoryService;
 
+    # Constructor receives the service
     public function __construct(CategoryService $categoryService)
     {
+
         $this->categoryService = $categoryService;
     }
 
@@ -16,7 +20,7 @@ class CategoryController
     public function index()
     {
         $categories = $this->categoryService->getAllCategories();
-        
+
         echo "<h3>All Categories:</h3><ul>";
         foreach ($categories as $cat) {
             echo "<li>
@@ -50,16 +54,24 @@ class CategoryController
         } else {
             echo "<h3>Category not found</h3>";
         }
-        
     }
 
-    public function categoryPrices1(){
+    public function categoryPrices1()
+    {
         return $this->categoryService->categoryPrices1();
-    } 
-    public function categoryPrices2(){
+    }
+    public function categoryPrices2()
+    {
         return $this->categoryService->categoryPrices2();
-    } 
-    public function categoryPrices3(){
+    }
+    public function categoryPrices3()
+    {
         return $this->categoryService->categoryPrices3();
-    } 
+    }
+    # In CategoryController
+    public function showCache(): void
+    {
+        $this->categoryService->getAllCachedCategories();
+        $this->categoryService->debugCache();
+    }
 }

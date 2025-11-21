@@ -11,8 +11,7 @@ class CategoryRepository extends EntityRepository
     public function findAllCategories(): array
     {
         # Use Category Repository Find All Method To Get All Category Class "instances" From Memory 
-        $allCategories = $this->findAll();
-        return $allCategories;
+        return $this->findAll();
     }
 
     # find category by name
@@ -55,5 +54,5 @@ class CategoryRepository extends EntityRepository
         }
         return $categories;
     }
-    
+   
 }

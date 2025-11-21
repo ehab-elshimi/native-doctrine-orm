@@ -1,7 +1,7 @@
 <?php
 namespace App\Controllers;
 
-use App\Service\ProductService;
+use App\Services\ProductService;
 
 class ProductController
 {
