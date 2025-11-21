@@ -1,8 +1,10 @@
 # Doctrine Category–Product Mini Framework
 
-A **handcrafted PHP project** demonstrating modern backend architecture using **native PHP 8+, Doctrine ORM, and custom dependency injection**, built **without Laravel or Symfony shortcuts**.
+A **small PHP project** built with **native PHP 8+**, **Doctrine ORM**, and a **custom dependency injection container**, without relying on Laravel or Symfony.  
 
-This project is designed to **showcase native backend engineering skills** — exactly what European recruiters and tech leads look for in backend developers.
+It demonstrates **basic backend architecture**, including **entity relationships, simple API handling, and data filtering**.  
+
+This project is intended to **showcase real backend skills** in PHP and Doctrine for **European backend opportunities**, focusing on clean, maintainable, and framework-independent code.
 
 ---
 
@@ -65,8 +67,7 @@ src/
             └── Container.php   ← handcrafted DI container
 config/
  └── bootstrap.php             ← container setup + services registration
-public/
- └── index.php                 ← front controller with routing
+ index.php                 ← front controller with routing
 ```
 
 ---
@@ -85,8 +86,8 @@ public/
 1. Clone repository:
 
 ```bash
-git clone https://github.com/your-username/doctrine-mini-framework.git
-cd doctrine-mini-framework
+git clone https://github.com/your-username/native-doctrine-orm.git
+cd native-doctrine-orm
 ```
 
 2. Install dependencies:
@@ -106,7 +107,7 @@ vendor/bin/doctrine orm:schema-tool:update --force
 5. Start local server:
 
 ```bash
-php -S localhost:8000 -t public
+php -S localhost:8000
 ```
 
 Open in browser: `http://localhost:8000`
@@ -149,10 +150,12 @@ Open in browser: `http://localhost:8000`
 
 ## 🧠 Learning Purpose
 
-* Deep understanding of **Doctrine ORM internals** (Unit of Work, Proxies, Repositories)
-* Building **MVC from scratch** with native PHP
-* Designing **realistic backend systems** without relying on frameworks
-* Preparing for **European backend roles**, especially in FinTech, SaaS, or companies valuing native coding skills
+* Deep understanding of **Doctrine ORM internals** (Unit of Work, Proxies, Repositories)  
+* Building **MVC applications from scratch** using native PHP  
+* Designing **scalable, maintainable backend systems** with clean architecture  
+* Implementing **AI-powered workflow automation** and intelligent backend processes  
+* Developing robust **APIs and integration with 3rd-party services**  
+* Preparing for **open Backend PHP roles in the European Union**, showcasing native PHP, automation, and API skills
 
 ---
 
@@ -162,7 +165,3 @@ Open in browser: `http://localhost:8000`
 * Add custom router or event system
 * Implement autowiring for the container
 * Add tests and CI/CD pipelines
-
----
-
-This project is perfect for showcasing **native PHP, Doctrine ORM, and clean backend architecture skills** to European recruiters and companies.
